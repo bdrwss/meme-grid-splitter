@@ -1,0 +1,119 @@
+<view class="page">
+  <!-- 顶部 Tab -->
+  <view class="tabs">
+    <view class="tab {{tab === 'codes' ? 'on' : ''}}" bindtap="switchTab" data-tab="codes">授权码</view>
+    <view class="tab {{tab === 'teachers' ? 'on' : ''}}" bindtap="switchTab" data-tab="teachers">教师管控</view>
+    <view class="tab {{tab === 'students' ? 'on' : ''}}" bindtap="switchTab" data-tab="students">学员总库</view>
+  </view>
+
+  <!-- ============ 模块A：教师授权码生成器（PRD 五.2A） ============ -->
+  <block wx:if="{{tab === 'codes'}}">
+    <view class="card">
+      <view class="section-title">生成新授权码</view>
+      <view class="row-btns">
+        <input class="input gen-count" type="number" value="{{genCount}}" bindinput="onGenCount" />
+        <view class="btn-primary half" bindtap="genCodes">生成（自动复制）</view>
+      </view>
+      <view class="muted" style="margin-top: 12rpx;">8 位随机码，发给教师用于注册；生成后已复制到剪贴板，可直接粘贴发送。</view>
+    </view>
+
+    <view class="card">
+      <view class="filters">
+        <picker class="f-status wide" range="{{codeFilters}}" value="{{codeFilterIndex}}" bindchange="onCodeFilterPick">
+          <view class="input picker-val">{{codeFilters[codeFilterIndex]}}（{{codesTotal}}）▾</view>
+        </picker>
+      </view>
+
+      <view class="code-item" wx:for="{{codes}}" wx:key="_id">
+        <view class="code-main">
+          <view class="code-val mono">{{item.code}}</view>
+          <view class="muted" wx:if="{{item.status === 1}}">{{item.used_by_uid || '?'}} 使用于 {{item.timeText}}</view>
+          <view class="muted" wx:else>生成于 {{item.timeText}}</view>
+        </view>
+        <view class="tag s{{item.status}}">{{item.status === 0 ? '未使用' : item.status === 1 ? '已使用' : '已作废'}}</view>
+        <view class="op" bindtap="copyCode" data-code="{{item.code}}">复制</view>
+        <view class="op danger" wx:if="{{item.status === 0}}" bindtap="voidCode" data-code="{{item.code}}">作废</view>
+      </view>
+
+      <view class="muted center" wx:if="{{!loading && codes.length === 0}}">还没有授权码，先生成一个</view>
+      <view class="muted center" wx:if="{{loading}}">加载中…</view>
+    </view>
+  </block>
+
+  <!-- ============ 模块B-1：教师管控（PRD 五.2B-1） ============ -->
+  <block wx:if="{{tab === 'teachers'}}">
+    <view class="card">
+      <view class="section-title">已注册教师（{{teachersTotal}}）</view>
+
+      <view class="t-item" wx:for="{{teachers}}" wx:key="_id">
+        <view class="code-main">
+          <view class="code-val mono">{{item.xibo_uid}}</view>
+          <view class="muted">名下学员 {{item.studentCount}} · 注册于 {{item.timeText}}</view>
+        </view>
+        <view class="tag {{item.user_status === 2 ? 's2' : 's1'}}">{{item.user_status === 2 ? '已禁用' : '正常'}}</view>
+        <view class="ops-grid">
+          <view class="op" bindtap="toggleTeacher" data-uid="{{item.xibo_uid}}" data-status="{{item.user_status}}">
+            {{item.user_status === 2 ? '解封' : '禁用'}}
+          </view>
+          <view class="op" bindtap="transferTeacher" data-uid="{{item.xibo_uid}}">划转学员</view>
+          <view class="op" bindtap="unbindTeacherWechat" data-uid="{{item.xibo_uid}}">解绑微信</view>
+          <view class="op danger" bindtap="deleteTeacher" data-uid="{{item.xibo_uid}}">彻底删除</view>
+        </view>
+      </view>
+
+      <view class="muted center" wx:if="{{!loading && teachers.length === 0}}">还没有教师注册</view>
+      <view class="muted center" wx:if="{{loading}}">加载中…</view>
+    </view>
+  </block>
+
+  <!-- ============ 模块B-2：一级总学员库（PRD 五.2B-2） ============ -->
+  <block wx:if="{{tab === 'students'}}">
+    <view class="card">
+      <view class="row-btns">
+        <view class="btn-primary half" bindtap="toggleImportPanel">{{importPanel ? '收起录入面板' : '公共批量录入'}}</view>
+      </view>
+
+      <block wx:if="{{importPanel}}">
+        <view class="field-label" style="margin-top: 24rpx;">批次名称</view>
+        <input class="input" placeholder="如：202607期" value="{{iBatch}}" bindinput="onIBatch" />
+        <view class="field-label" style="margin-top: 20rpx;">归属教师 UID（留空 = 公共学员，供全网验证）</view>
+        <input class="input mono" placeholder="教师 UID，可留空" value="{{iTeacherUid}}" bindinput="onITeacherUid" />
+        <view class="field-label" style="margin-top: 20rpx;">UID 列表（换行/逗号分隔，自动去重）</view>
+        <textarea class="textarea" placeholder="一行一个 UID" value="{{iUids}}" bindinput="onIUids" maxlength="-1"></textarea>
+        <view class="btn-primary" style="margin-top: 28rpx;" bindtap="adminImport">导入一级总库</view>
+      </block>
+    </view>
+
+    <view class="card">
+      <view class="section-title">全网学员（{{studentsTotal}}）</view>
+      <view class="filters">
+        <input class="input f-batch" placeholder="批次号" value="{{sBatch}}" bindinput="onSBatch" bindconfirm="reloadStudents" />
+        <input class="input f-uid" placeholder="搜索 UID" value="{{sUid}}" bindinput="onSUid" bindconfirm="reloadStudents" />
+        <picker class="f-status" range="{{stuFilters}}" value="{{stuStatusIndex}}" bindchange="onStuFilterPick">
+          <view class="input picker-val">{{stuFilters[stuStatusIndex]}} ▾</view>
+        </picker>
+      </view>
+
+      <view class="stu" wx:for="{{students}}" wx:key="_id">
+        <view class="stu-main">
+          <view class="stu-uid mono">{{item.student_uid}}</view>
+          <view class="muted">{{item.batch_no || '—'}} · 教师：{{item.teacher_uid || '公共'}}</view>
+        </view>
+        <view class="ops-grid">
+          <view class="tag {{item.status === 2 ? 's2' : item.status === 1 ? 's1' : ''}}">
+            {{item.status === 0 ? '未绑定' : item.status === 1 ? '已绑定' : '已封禁'}}
+          </view>
+          <view class="op" bindtap="setStudentTeacher" data-uid="{{item.student_uid}}">改归属</view>
+          <view class="op" bindtap="toggleStudent" data-uid="{{item.student_uid}}" data-status="{{item.status}}">
+            {{item.status === 2 ? '解封' : '拉黑'}}
+          </view>
+          <view class="op" wx:if="{{item.status === 1}}" bindtap="forceUnbindStudent" data-uid="{{item.student_uid}}">强制解绑</view>
+          <view class="op danger" bindtap="deleteStudent" data-uid="{{item.student_uid}}">彻底删除</view>
+        </view>
+      </view>
+
+      <view class="muted center" wx:if="{{!loading && students.length === 0}}">总库暂无学员</view>
+      <view class="muted center" wx:if="{{loading}}">加载中…</view>
+    </view>
+  </block>
+</view>

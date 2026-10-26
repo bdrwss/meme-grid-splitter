@@ -1,0 +1,37 @@
+<view class="page">
+  <!-- 身份选择面板（PRD 三.2） -->
+  <view class="card" wx:if="{{step === 'choose'}}">
+    <view class="section-title">选择你的身份</view>
+    <view class="role-btn" bindtap="pickStudent">
+      <view class="role-name">我是学员</view>
+      <view class="muted">用带班老师录入学员总表的喜播 UID 绑定，绑定后即可使用全部工具</view>
+    </view>
+    <view class="role-btn" bindtap="pickTeacher">
+      <view class="role-name">我是教师</view>
+      <view class="muted">用教师 UID + 管理员发放的 8 位授权码注册，可批量管理自己的学员库</view>
+    </view>
+  </view>
+
+  <!-- 分支A：学员绑定（PRD 三.2 分支A） -->
+  <view class="card" wx:if="{{step === 'student'}}">
+    <view class="section-title">学员绑定</view>
+    <view class="muted" style="margin-bottom: 24rpx;">
+      请输入带班老师在学员总表中登记的喜播教育 UID。UID 已被其他微信绑定时，需老师先解绑。
+    </view>
+    <input class="input" placeholder="喜播教育 UID，如 XB10086" value="{{uid}}" bindinput="onUidInput" />
+    <view class="btn-primary {{uid ? '' : 'disabled'}}" style="margin-top: 36rpx;" bindtap="submitStudent">绑定</view>
+    <view class="btn-ghost gap" bindtap="backChoose">返回选择身份</view>
+  </view>
+
+  <!-- 分支B：教师注册（PRD 三.2 分支B） -->
+  <view class="card" wx:if="{{step === 'teacher'}}">
+    <view class="section-title">教师注册</view>
+    <view class="muted" style="margin-bottom: 24rpx;">
+      输入教师喜播 UID 和管理员发放的 8 位授权码。授权码一码一微信，绑定后不可换用。
+    </view>
+    <input class="input" placeholder="教师喜播 UID" value="{{uid}}" bindinput="onUidInput" />
+    <input class="input mono" style="margin-top: 20rpx;" placeholder="8 位授权码，如 AB12CD34" value="{{authCode}}" bindinput="onCodeInput" />
+    <view class="btn-primary {{uid && authCode ? '' : 'disabled'}}" style="margin-top: 36rpx;" bindtap="submitTeacher">注册并登录</view>
+    <view class="btn-ghost gap" bindtap="backChoose">返回选择身份</view>
+  </view>
+</view>

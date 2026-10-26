@@ -1,0 +1,43 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/profile/index",
+    "pages/rolebind/index",
+    "pages/pool/index",
+    "pages/admin/index",
+    "pages/splitter/index",
+    "pages/bind/index",
+    "pages/teacher/index"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#0f172a",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "AI极客创作者工具",
+    "backgroundColor": "#f8fafc",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#94a3b8",
+    "selectedColor": "#2563eb",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "position": "bottom",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "工具",
+        "iconPath": "images/tab/tools.png",
+        "selectedIconPath": "images/tab/tools-active.png"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "我的",
+        "iconPath": "images/tab/me.png",
+        "selectedIconPath": "images/tab/me-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

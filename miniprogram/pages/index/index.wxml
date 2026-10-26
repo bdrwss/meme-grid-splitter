@@ -1,0 +1,60 @@
+<view class="page">
+  <!-- 云端模式：封禁用户打开小程序直接全屏拦截（PRD 三.1 情况A） -->
+  <view wx:if="{{banned}}" class="blocked-full">
+    <view class="blocked-icon">⛔</view>
+    <view class="blocked-title">无法使用</view>
+    <view class="blocked-text">您的账号已被管理员停用，无法使用本工具</view>
+  </view>
+
+  <block wx:else>
+  <!-- 顶部固定搜索区（sticky，列表滚动时保持可见） -->
+  <view class="search-wrap">
+    <view class="search-box">
+      <text class="search-icon">⌕</text>
+      <input
+        class="search-input"
+        placeholder="搜索工具，如：九宫格 / 表情包 / gif"
+        placeholder-class="search-ph"
+        value="{{query}}"
+        bindinput="onSearch"
+        confirm-type="search"
+      />
+      <text wx:if="{{query}}" class="search-clear" bindtap="onClear">✕</text>
+    </view>
+  </view>
+
+  <!-- 绑定/登录状态条 -->
+  <view class="binding-bar {{cloudMode ? (sessionOk ? 'ok' : '') : (bindingActive ? 'ok' : '')}}" bindtap="onBindingTap">
+    <text class="binding-dot"></text>
+    <text class="binding-text">{{cloudMode ? sessionText : bindingText}}</text>
+    <text class="binding-arrow">›</text>
+  </view>
+
+  <!-- 工具列表 -->
+  <view class="tool-list">
+    <view
+      wx:for="{{filtered}}"
+      wx:key="key"
+      class="tool-card"
+      bindtap="onToolTap"
+      data-key="{{item.key}}"
+    >
+      <view class="tool-icon">{{item.icon}}</view>
+      <view class="tool-info">
+        <view class="tool-name">{{item.name}}</view>
+        <view class="tool-sub">{{item.subtitle}}</view>
+      </view>
+      <view class="tool-tag" wx:if="{{item.needActivation && !bindingActive}}">需激活</view>
+      <text class="tool-arrow">›</text>
+    </view>
+
+    <view wx:if="{{filtered.length === 0}}" class="empty">
+      <view class="empty-icon">🔍</view>
+      <view>没有找到匹配「{{query}}」的工具</view>
+      <view class="muted" wx:if="{{totalTools === 0}}">更多工具正在路上，敬请期待</view>
+    </view>
+  </view>
+
+  <view class="footer-hint">切换到底部「我的」可查看身份信息与管理入口</view>
+  </block>
+</view>

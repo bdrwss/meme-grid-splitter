@@ -1,0 +1,646 @@
+.page {
+  padding: 24rpx 24rpx 40rpx;
+}
+
+/* 账户头部卡片 */
+.hero {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border-radius: 24rpx;
+  padding: 36rpx 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 8rpx 24rpx rgba(15, 23, 42, 0.18);
+}
+
+.hero-logo {
+  width: 108rpx;
+  height: 108rpx;
+  border-radius: 28rpx;
+  background: #ffffff;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+}
+
+.hero-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.hero-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #f8fafc;
+  margin-bottom: 8rpx;
+}
+
+.hero-sub {
+  font-size: 22rpx;
+  color: #94a3b8;
+}
+
+.hero-badge {
+  flex-shrink: 0;
+  margin-left: 16rpx;
+  font-size: 22rpx;
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.14);
+  border: 1rpx solid rgba(251, 191, 36, 0.35);
+  border-radius: 999rpx;
+  padding: 6rpx 18rpx;
+}
+
+.hero-badge.ok {
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.14);
+  border-color: rgba(74, 222, 128, 0.35);
+}
+
+/* 卡片 */
+.card {
+  margin-bottom: 24rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-bottom: 20rpx;
+  color: #0f172a;
+}
+
+.kv {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12rpx 0;
+  font-size: 28rpx;
+}
+
+.kv .k {
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.kv .v {
+  color: #0f172a;
+  text-align: right;
+  word-break: break-all;
+}
+
+.kv .v.mono {
+  font-family: Menlo, Consolas, monospace;
+  letter-spacing: 1rpx;
+}
+
+.kv .v.ok {
+  color: #16a34a;
+}
+
+.kv .v.bad {
+  color: #dc2626;
+}
+
+.notice {
+  margin-top: 16rpx;
+  background: #f1f5f9;
+  border-radius: 12rpx;
+  padding: 16rpx 20rpx;
+  font-size: 24rpx;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.notice.warn {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.empty-state {
+  padding: 16rpx 0 8rpx;
+}
+
+.empty-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-bottom: 10rpx;
+}
+
+.btn-block {
+  margin-top: 24rpx;
+}
+
+.btn-ghost.gap {
+  margin-top: 16rpx;
+}
+
+.row-note {
+  font-size: 24rpx;
+  color: #64748b;
+  margin-bottom: 4rpx;
+}
+
+.about-text {
+  font-size: 26rpx;
+  color: #475569;
+  line-height: 1.7;
+  margin-bottom: 8rpx;
+}
+
+.footer-hint {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 22rpx;
+  padding: 24rpx 0 8rpx;
+}
+
+/* 云端模式：封禁全屏拦截（PRD 三.1 情况A） */
+.blocked {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 60rpx;
+}
+
+.blocked-icon {
+  font-size: 96rpx;
+  margin-bottom: 24rpx;
+}
+
+.blocked-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  margin-bottom: 16rpx;
+}
+
+.blocked-text {
+  font-size: 26rpx;
+  color: #64748b;
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* 管理员验证弹窗（PRD 五.1） */
+.modal-mask {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99;
+}
+
+.modal {
+  width: 600rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 36rpx 32rpx 28rpx;
+  box-sizing: border-box;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 28rpx;
+}
+
+.modal-btns {
+  display: flex;
+  margin-top: 32rpx;
+  gap: 20rpx;
+}
+
+.modal-btn {
+  flex: 1;
+  text-align: center;
+  padding: 18rpx 0;
+  border-radius: 14rpx;
+  font-size: 28rpx;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.modal-btn.primary {
+  background: #2563eb;
+  color: #fff;
+}
+
+.modal-btn.disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* 头像交互区域与提示 */
+.hero-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+  margin-right: 24rpx;
+}
+
+.hero-avatar-hint {
+  position: absolute;
+  bottom: -6rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 18rpx;
+  font-weight: 500;
+  padding: 2rpx 10rpx;
+  border-radius: 999rpx;
+  white-space: nowrap;
+  box-shadow: 0 2rpx 8rpx rgba(37, 99, 235, 0.4);
+}
+
+/* 身份选择与绑定弹窗 */
+.role-modal {
+  width: 640rpx;
+  padding: 36rpx 32rpx 32rpx;
+}
+
+.modal-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20rpx;
+  min-height: 48rpx;
+}
+
+.modal-header .modal-title {
+  margin-bottom: 0;
+}
+
+.modal-back {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 26rpx;
+  color: #2563eb;
+  padding: 8rpx 8rpx;
+  font-weight: 500;
+}
+
+.modal-close {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 32rpx;
+  color: #94a3b8;
+  padding: 8rpx 8rpx;
+  line-height: 1;
+}
+
+.modal-desc {
+  font-size: 24rpx;
+  color: #64748b;
+  text-align: center;
+  margin-bottom: 32rpx;
+}
+
+/* 角色选择卡片 */
+.role-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  margin-bottom: 24rpx;
+}
+
+.role-card {
+  display: flex;
+  align-items: center;
+  padding: 26rpx 28rpx;
+  background: #f8fafc;
+  border: 2rpx solid #e2e8f0;
+  border-radius: 20rpx;
+  transition: all 0.2s ease;
+}
+
+.role-card-hover {
+  background: #eff6ff;
+  border-color: #93c5fd;
+  transform: scale(0.99);
+}
+
+.role-icon {
+  font-size: 48rpx;
+  margin-right: 20rpx;
+}
+
+.role-meta {
+  flex: 1;
+}
+
+.role-meta-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 6rpx;
+}
+
+.role-meta-sub {
+  font-size: 22rpx;
+  color: #64748b;
+}
+
+.role-meta-arrow {
+  font-size: 36rpx;
+  color: #cbd5e1;
+  margin-left: 12rpx;
+}
+
+.modal-footer-cancel {
+  text-align: center;
+  padding: 16rpx 0 4rpx;
+  font-size: 26rpx;
+  color: #94a3b8;
+}
+
+/* 角色分段切换 */
+.role-tabs {
+  display: flex;
+  background: #f1f5f9;
+  border-radius: 14rpx;
+  padding: 6rpx;
+  margin-bottom: 28rpx;
+}
+
+.role-tab {
+  flex: 1;
+  text-align: center;
+  padding: 14rpx 0;
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #64748b;
+  border-radius: 10rpx;
+  transition: all 0.2s ease;
+}
+
+.role-tab.active {
+  background: #ffffff;
+  color: #2563eb;
+  font-weight: 600;
+  box-shadow: 0 2rpx 8rpx rgba(15, 23, 42, 0.08);
+}
+
+/* 表单字段 */
+.field-item {
+  margin-bottom: 12rpx;
+}
+
+.field-title {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #334155;
+  margin-bottom: 12rpx;
+}
+
+.field-input {
+  width: 100%;
+  height: 80rpx;
+  background: #f8fafc;
+  border: 2rpx solid #e2e8f0;
+  border-radius: 14rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  color: #0f172a;
+  box-sizing: border-box;
+}
+
+.field-input.mono {
+  font-family: Menlo, Consolas, monospace;
+  letter-spacing: 2rpx;
+}
+
+.field-tip {
+  font-size: 22rpx;
+  color: #94a3b8;
+  margin-top: 10rpx;
+  line-height: 1.4;
+}
+
+
+/* 已绑定状态右侧行为栏（角色徽标） */
+.hero-bound-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: 16rpx;
+}
+
+.hero-role-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6rpx;
+  font-size: 22rpx;
+  padding: 6rpx 18rpx;
+  border-radius: 999rpx;
+  font-weight: 600;
+}
+
+.hero-role-pill.student {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.16);
+  border: 1rpx solid rgba(56, 189, 248, 0.4);
+}
+
+.hero-role-pill.teacher {
+  color: #c084fc;
+  background: rgba(192, 132, 252, 0.16);
+  border: 1rpx solid rgba(192, 132, 252, 0.4);
+}
+
+.hero-role-pill.admin {
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.16);
+  border: 1rpx solid rgba(251, 191, 36, 0.4);
+}
+
+.hero-role-pill .role-icon {
+  font-size: 24rpx;
+  margin-right: 0;
+}
+
+.hero-role-pill .role-text {
+  font-size: 22rpx;
+}
+
+.hero-edit-btn {
+  font-size: 20rpx;
+  color: #94a3b8;
+  padding: 2rpx 4rpx;
+}
+
+/* 卡片标题行与右侧操作按钮 */
+.card-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.card-header-row .section-title {
+  margin-bottom: 0;
+}
+
+.card-header-row.clickable {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* 折叠卡片样式 */
+.account-card {
+  transition: all 0.2s ease;
+}
+
+.account-card.collapsed .card-header-row {
+  margin-bottom: 0;
+}
+
+.card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  flex: 1;
+  min-width: 0;
+}
+
+.account-summary-pill {
+  font-size: 22rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 999rpx;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.account-summary-pill.ok {
+  color: #16a34a;
+  background: #f0fdf4;
+}
+
+.account-summary-pill.bad {
+  color: #dc2626;
+  background: #fef2f2;
+}
+
+.expand-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6rpx;
+  font-size: 24rpx;
+  color: #2563eb;
+  padding: 6rpx 12rpx;
+  border-radius: 8rpx;
+  flex-shrink: 0;
+}
+
+.expand-text {
+  font-weight: 500;
+}
+
+.expand-arrow {
+  font-size: 24rpx;
+  transition: transform 0.2s ease;
+  display: inline-block;
+  line-height: 1;
+}
+
+.expand-arrow.expanded {
+  transform: rotate(180deg);
+}
+
+.expand-body {
+  margin-top: 16rpx;
+  border-top: 1rpx solid #f1f5f9;
+  padding-top: 12rpx;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.text-link-btn {
+  font-size: 24rpx;
+  color: #2563eb;
+  font-weight: 500;
+}
+
+/* 个人信息编辑弹窗 */
+.profile-edit-modal {
+  width: 640rpx;
+  padding: 36rpx 32rpx 32rpx;
+}
+
+.avatar-edit-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 12rpx 0 28rpx;
+}
+
+.avatar-preview-wrap {
+  position: relative;
+  width: 136rpx;
+  height: 136rpx;
+}
+
+.avatar-preview-img {
+  width: 136rpx;
+  height: 136rpx;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: 4rpx solid #e2e8f0;
+}
+
+.avatar-camera-badge {
+  position: absolute;
+  right: -4rpx;
+  bottom: -4rpx;
+  width: 44rpx;
+  height: 44rpx;
+  background: #2563eb;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  border: 3rpx solid #ffffff;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+}
+
+.avatar-edit-tip {
+  font-size: 22rpx;
+  color: #2563eb;
+  margin-top: 12rpx;
+  font-weight: 500;
+}
+
+.rebind-link-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 24rpx;
+}
+
+.rebind-link {
+  font-size: 22rpx;
+  color: #64748b;
+  text-decoration: underline;
+}
+

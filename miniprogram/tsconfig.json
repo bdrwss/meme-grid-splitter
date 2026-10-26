@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "rootDir": ".",
+    "outDir": ".",
+    "strict": false,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "skipLibCheck": true,
+    "lib": ["ES2018"],
+    "types": []
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["./tests/**/*", "./.tmp/**/*"]
+}

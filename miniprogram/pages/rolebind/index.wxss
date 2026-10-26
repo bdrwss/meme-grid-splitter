@@ -1,0 +1,28 @@
+.role-btn {
+  border: 1rpx solid #e2e8f0;
+  border-radius: 16rpx;
+  padding: 28rpx 24rpx;
+  margin-bottom: 20rpx;
+  background: #f8fafc;
+}
+
+.role-btn:last-child {
+  margin-bottom: 0;
+}
+
+.role-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+
+.mono {
+  font-family: Menlo, Consolas, monospace;
+  letter-spacing: 1rpx;
+}
+
+.field-label {
+  font-size: 26rpx;
+  color: #475569;
+  margin-bottom: 12rpx;
+}

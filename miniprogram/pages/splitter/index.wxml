@@ -1,0 +1,498 @@
+<view class="page-container">
+  <!-- 顶部标题栏 -->
+  <view class="header-card">
+    <view class="header-title-row">
+      <view class="header-icon-box">
+        <text class="header-icon">✂</text>
+      </view>
+      <view class="header-text-col">
+        <view class="header-main-title">九宫格表情包切割器</view>
+        <view class="header-sub-title">把多宫格动图视频拆成独立表情包</view>
+      </view>
+    </view>
+    <view class="shield-tag">
+      <text class="shield-icon">🛡</text>
+      <text class="shield-text">视频仅在本机处理，不上传服务器</text>
+    </view>
+  </view>
+
+  <!-- 步骤 1：未上传视频时的选择区 -->
+  <view class="section-card" wx:if="{{!video}}">
+    <view class="section-header">
+      <view class="step-badge">1</view>
+      <view class="section-titles">
+        <view class="section-title">选择或体验视频</view>
+        <view class="section-desc">支持 MP4 / MOV，60 秒以内短视频</view>
+      </view>
+    </view>
+
+    <view class="upload-box" bindtap="chooseVideo">
+      <view class="upload-icon-circle">＋</view>
+      <view class="upload-main-text">点击选择本地视频</view>
+      <view class="upload-sub-text">从手机相册选取包含多宫格的动图视频</view>
+    </view>
+
+    <view class="sample-divider">
+      <view class="divider-line"></view>
+      <text class="divider-text">或</text>
+      <view class="divider-line"></view>
+    </view>
+
+    <view class="sample-btn {{sampleLoading ? 'loading' : ''}}" bindtap="loadSample">
+      <text class="sample-btn-icon">⚡</text>
+      <text class="sample-btn-text">{{sampleLoading ? '正在加载示例…' : '快速体验：使用内置九宫格示例'}}</text>
+    </view>
+  </view>
+
+  <!-- 步骤 1（已载入视频）：设置切割与参数 -->
+  <block wx:if="{{video}}">
+    <view class="section-card">
+      <view class="section-header-action">
+        <view class="section-header-left">
+          <view class="step-badge">1</view>
+          <view class="section-titles">
+            <view class="section-title">设置切割并执行</view>
+            <view class="section-desc">调整网格线与参数后，即可开始本地切割</view>
+          </view>
+        </view>
+        <view class="header-actions">
+          <view class="btn-action-outline" bindtap="chooseVideo">
+            <text class="btn-icon">↺</text> 更换视频
+          </view>
+          <view class="btn-action-primary" bindtap="onSubmit">
+            <text class="btn-icon">✂</text> {{results ? '重新切割' : '开始切割'}}
+          </view>
+        </view>
+      </view>
+
+      <!-- 视频基本信息条 -->
+      <view class="video-info-banner">
+        <view class="info-name-col">
+          <text class="video-name-text">{{video.name}}</text>
+        </view>
+        <view class="info-badges-row">
+          <view class="meta-badge">{{video.width}} × {{video.height}}</view>
+          <view class="meta-badge" wx:if="{{video.aspectRatio}}">{{video.aspectRatio}}</view>
+          <view class="meta-badge">{{video.duration}}s</view>
+          <view class="meta-badge">{{video.sizeText}}</view>
+        </view>
+      </view>
+
+      <!-- 预览画布与播放器视窗 -->
+      <view class="canvas-panel">
+        <!-- 视窗工具栏 -->
+        <view class="stage-toolbar">
+          <view class="stage-spec-tag">
+            <text class="spec-label">视窗</text>
+            <text class="spec-value">{{hLines.length + 1}}×{{vLines.length + 1}}</text>
+            <text class="spec-cells">({{cellTotal}}格)</text>
+          </view>
+          <view class="toolbar-btns">
+            <view class="tool-btn" bindtap="toggleLines">
+              {{showLines ? '隐藏线' : '显示线'}}
+            </view>
+            <view class="tool-btn" bindtap="resetGrid">
+              均等重置
+            </view>
+            <view class="tool-btn {{showLabels ? 'active' : ''}}" bindtap="toggleLabels">
+              序号标识
+            </view>
+            <view class="tool-btn {{results && results.length ? 'has-history' : ''}}" bindtap="openHistory">
+              显示历史<text class="history-count-badge" wx:if="{{results && results.length}}">{{results.length}}</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 视频与网格画布层叠区 -->
+        <view class="video-stage" style="height: {{previewHeight}}px;">
+          <video
+            id="previewVideo"
+            class="preview-video"
+            src="{{video.path}}"
+            autoplay="{{isPlaying}}"
+            loop="{{isLoop}}"
+            muted="{{true}}"
+            controls="{{false}}"
+            show-center-play-btn="{{false}}"
+            object-fit="contain"
+            bindtimeupdate="onTimeUpdate"
+          ></video>
+          <canvas
+            type="2d"
+            id="grid"
+            class="grid-canvas"
+            bindtouchstart="onTouchStart"
+            catchtouchmove="onTouchMove"
+            bindtouchend="onTouchEnd"
+          ></canvas>
+        </view>
+
+        <!-- 播放器控制行 -->
+        <view class="player-controls-bar">
+          <view class="play-btn" bindtap="togglePlay">
+            <text class="play-icon">{{isPlaying ? '⏸' : '▶'}}</text>
+          </view>
+          <view class="time-text">{{currentVideoTimeText}} / {{videoDurationText}}</view>
+          <view class="slider-wrapper">
+            <slider
+              class="video-slider"
+              min="0"
+              max="{{video.duration}}"
+              value="{{currentVideoTime}}"
+              step="0.05"
+              block-size="14"
+              block-color="#2563eb"
+              activeColor="#2563eb"
+              backgroundColor="#e2e8f0"
+              bindchange="onSeekChange"
+            />
+          </view>
+          <view class="loop-btn {{isLoop ? 'active' : ''}}" bindtap="toggleLoop">
+            <text class="loop-text">循环</text>
+          </view>
+        </view>
+        <view class="canvas-hint">提示：在画面内拖动虚线（粉色横线/蓝色竖线）可精确调整切割位置</view>
+      </view>
+
+      <!-- 网格预设与单位切换 -->
+      <view class="controls-card">
+        <view class="ctrl-header-row">
+          <text class="ctrl-title">网格预设</text>
+          <view class="unit-switch-group">
+            <view
+              class="unit-btn {{unit === 'percent' ? 'active' : ''}}"
+              bindtap="onUnitChange"
+              data-unit="percent"
+            >
+              百分比 %
+            </view>
+            <view
+              class="unit-btn {{unit === 'pixel' ? 'active' : ''}}"
+              bindtap="onUnitChange"
+              data-unit="pixel"
+            >
+              像素 px
+            </view>
+          </view>
+        </view>
+
+        <view class="preset-chips-row">
+          <view
+            class="preset-chip {{activePreset === item.id ? 'active' : ''}}"
+            wx:for="{{presets}}"
+            wx:key="id"
+            bindtap="onPresetTap"
+            data-id="{{item.id}}"
+          >
+            {{item.label}}
+          </view>
+        </view>
+        <view class="preset-name-desc">{{activePresetName}}</view>
+      </view>
+
+      <!-- 水平横线精细管理 -->
+      <view class="controls-card">
+        <view class="ctrl-header-row">
+          <view class="line-group-title">
+            <view class="line-color-dot pink"></view>
+            <text class="ctrl-title">水平横线</text>
+            <text class="line-count-tag">{{hLines.length}}/10 条</text>
+          </view>
+          <view class="line-ops-btns">
+            <view class="line-mini-btn {{hLines.length === 0 ? 'disabled' : ''}}" bindtap="removeHLine">－</view>
+            <view class="line-mini-btn {{hLines.length >= 10 ? 'disabled' : ''}}" bindtap="addHLine">＋</view>
+          </view>
+        </view>
+
+        <view class="line-items-list" wx:if="{{hLineViews.length > 0}}">
+          <view class="line-item-row" wx:for="{{hLineViews}}" wx:key="index">
+            <text class="line-item-label">线 {{item.order}}</text>
+            <input
+              type="digit"
+              class="line-item-input"
+              value="{{item.displayValue}}"
+              bindblur="onHLineBlur"
+              data-index="{{item.index}}"
+            />
+            <text class="line-item-unit">{{unit === 'percent' ? '%' : 'px'}}</text>
+            <view class="line-item-del" bindtap="onDeleteHLine" data-index="{{item.index}}">✕</view>
+          </view>
+        </view>
+        <view class="line-empty-tip" wx:if="{{hLineViews.length === 0}}">当前无水平切割线</view>
+      </view>
+
+      <!-- 垂直竖线精细管理 -->
+      <view class="controls-card">
+        <view class="ctrl-header-row">
+          <view class="line-group-title">
+            <view class="line-color-dot blue"></view>
+            <text class="ctrl-title">垂直竖线</text>
+            <text class="line-count-tag">{{vLines.length}}/10 条</text>
+          </view>
+          <view class="line-ops-btns">
+            <view class="line-mini-btn {{vLines.length === 0 ? 'disabled' : ''}}" bindtap="removeVLine">－</view>
+            <view class="line-mini-btn {{vLines.length >= 10 ? 'disabled' : ''}}" bindtap="addVLine">＋</view>
+          </view>
+        </view>
+
+        <view class="line-items-list" wx:if="{{vLineViews.length > 0}}">
+          <view class="line-item-row" wx:for="{{vLineViews}}" wx:key="index">
+            <text class="line-item-label">线 {{item.order}}</text>
+            <input
+              type="digit"
+              class="line-item-input"
+              value="{{item.displayValue}}"
+              bindblur="onVLineBlur"
+              data-index="{{item.index}}"
+            />
+            <text class="line-item-unit">{{unit === 'percent' ? '%' : 'px'}}</text>
+            <view class="line-item-del" bindtap="onDeleteVLine" data-index="{{item.index}}">✕</view>
+          </view>
+        </view>
+        <view class="line-empty-tip" wx:if="{{vLineViews.length === 0}}">当前无垂直切割线</view>
+      </view>
+
+      <!-- 时间范围截取与取当前帧 -->
+      <view class="controls-card">
+        <view class="ctrl-header-row">
+          <text class="ctrl-title">时间范围 (秒)</text>
+          <text class="ctrl-meta-text">原视频 {{video.duration}}s</text>
+        </view>
+        <view class="time-range-row">
+          <input
+            type="digit"
+            class="time-input"
+            value="{{startTime}}"
+            placeholder="0"
+            bindblur="onStartTimeBlur"
+          />
+          <text class="time-arrow">→</text>
+          <input
+            type="digit"
+            class="time-input"
+            value="{{endTime}}"
+            placeholder="{{video.duration}}"
+            bindblur="onEndTimeBlur"
+          />
+        </view>
+        <view class="pick-frame-btn" bindtap="handlePickCurrentFrame">
+          <text class="pick-frame-icon">⏱</text> 取播放器当前帧为起始时间
+        </view>
+        <view class="ctrl-tip-text">可裁剪掉视频片头片尾多余内容，精准保留精彩表情段落。</view>
+      </view>
+
+      <!-- 播放倍速与导出时长（支持视频变速，导出的时长严格为变速后的时长） -->
+      <view class="controls-card">
+        <view class="ctrl-header-row">
+          <text class="ctrl-title">播放倍速 / 导出时长</text>
+          <text class="speed-active-badge">{{speedFactor}}x</text>
+        </view>
+        <view class="speed-chips-row">
+          <view
+            class="speed-chip {{speedFactor === item ? 'active' : ''}}"
+            wx:for="{{speedOptions}}"
+            wx:key="*this"
+            bindtap="onSpeedTap"
+            data-val="{{item}}"
+          >
+            {{item === 1.0 ? '1.0x (原速)' : item + 'x'}}
+          </view>
+        </view>
+        <view class="speed-desc-banner">
+          <text class="speed-desc-icon">⚡</text>
+          <text class="speed-desc-text">{{speedDescText}}</text>
+        </view>
+        <view class="ctrl-tip-text">
+          加速压缩（如 1.5x / 2.0x）可在更短时长内展现完整动作细节，显著减小动图体积；慢放（0.5x / 0.75x）可放大微表情。导出的 GIF 时长严格等于变速后的时长！
+        </view>
+      </view>
+
+      <!-- GIF 抽帧率与画质 -->
+      <view class="controls-card">
+        <view class="ctrl-header-row">
+          <text class="ctrl-title">GIF 抽帧率 (FPS)</text>
+          <text class="fps-val-text">{{gifFps}} 帧/秒</text>
+        </view>
+        <slider
+          class="fps-slider"
+          min="6"
+          max="24"
+          step="2"
+          value="{{gifFps}}"
+          block-size="16"
+          block-color="#f59e0b"
+          activeColor="#f59e0b"
+          backgroundColor="#e2e8f0"
+          bindchange="onGifFpsChange"
+        />
+        <view class="ctrl-tip-text">帧率适中(10~15fps)可确保动图流畅且体积轻巧，符合微信表情包大小限制。</view>
+
+        <view class="ctrl-header-row" style="margin-top: 24rpx;">
+          <text class="ctrl-title">画质分辨率</text>
+        </view>
+        <view class="quality-chips-row">
+          <view
+            class="quality-chip {{quality === item.w ? 'active' : ''}}"
+            wx:for="{{qualityOptions}}"
+            wx:key="w"
+            bindtap="onQualityTap"
+            data-w="{{item.w}}"
+          >
+            {{item.label}} ({{item.w}}px)
+          </view>
+        </view>
+        <view class="estimate-line-text">{{estimateText}}</view>
+      </view>
+
+      <!-- 底部提交操作区 -->
+      <view class="submit-action-card">
+        <view class="main-submit-btn" bindtap="onSubmit">
+          <text class="submit-btn-icon">✂</text>
+          <text class="submit-btn-text">{{results ? '重新切割' : '开始切割'}}</text>
+        </view>
+        <view class="submit-notice-text">
+          全程在手机本地解码与逐帧编码，视频绝不上传服务器。
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 全屏防误触与切割进度遮罩 -->
+  <view class="processing-mask" wx:if="{{processing.active}}" catchtouchmove="noop" catchtap="noop">
+    <view class="processing-modal-card" catchtap="noop">
+      <view class="processing-icon-spin">⚙</view>
+      <view class="processing-title-text">{{processing.text}}</view>
+      <view class="progress-bar-bg">
+        <view class="progress-bar-inner" style="width: {{processing.ratioPercent}}%;"></view>
+      </view>
+      <view class="processing-percent-text">{{processing.ratioPercent}}%</view>
+      <view class="processing-desc-text">正在手机本地逐帧解码与裁剪渲染，请勿退出页面…</view>
+      <view class="cancel-cut-btn" bindtap="onCancelProcessing">
+        取消切割
+      </view>
+    </view>
+  </view>
+
+  <!-- 步骤 2 结果弹窗（步骤 2：查看和下载结果，对应 Web 版 HistoryDialog & DownloadPanel） -->
+  <view class="history-dialog-mask" wx:if="{{historyOpen}}" catchtouchmove="noop">
+    <view class="history-dialog-card">
+      <!-- 弹窗标题栏 -->
+      <view class="history-modal-header">
+        <view class="history-header-left">
+          <view class="step-badge step2">2</view>
+          <view class="history-titles">
+            <view class="history-main-title">步骤 2：查看和下载结果</view>
+            <view class="history-sub-title">可单独保存，或打包成 ZIP 批量导出</view>
+          </view>
+        </view>
+        <view class="history-close-btn" bindtap="closeHistory">✕</view>
+      </view>
+
+      <!-- 弹窗滚动内容区 -->
+      <scroll-view scroll-y class="history-scroll-body">
+        <!-- 命名设置 -->
+        <view class="naming-card">
+          <view class="naming-inputs-row">
+            <view class="naming-field">
+              <text class="naming-label">文件名前缀</text>
+              <input
+                class="naming-input"
+                value="{{prefix}}"
+                placeholder="表情包"
+                maxlength="50"
+                bindinput="onPrefixInput"
+              />
+            </view>
+            <view class="naming-field">
+              <text class="naming-label">文件名后缀 (可选)</text>
+              <input
+                class="naming-input"
+                value="{{suffix}}"
+                placeholder="如 _hd 或 -wx"
+                maxlength="50"
+                bindinput="onSuffixInput"
+              />
+            </view>
+          </view>
+          <view class="naming-preview-line">
+            命名预览：<text class="preview-filename">{{fileNamePreview}}</text>
+          </view>
+        </view>
+
+        <!-- 批量操作按钮组 -->
+        <view class="batch-actions-row">
+          <view class="batch-btn primary" bindtap="onSaveAll">
+            <text class="btn-icon">💾</text> 全部保存到相册
+          </view>
+          <view class="batch-btn zip" bindtap="onExportZip">
+            <text class="btn-icon">📦</text> 打包导出 ZIP
+          </view>
+        </view>
+
+        <view class="selection-control-row">
+          <view class="select-all-btn" bindtap="onToggleSelectAll">
+            {{selectedIndices.length === results.length ? '取消全选' : '全选所有'}}
+          </view>
+          <view
+            class="save-selected-btn {{selectedIndices.length === 0 ? 'disabled' : ''}}"
+            bindtap="onSaveSelected"
+          >
+            保存所选 ({{selectedIndices.length}})
+          </view>
+        </view>
+
+        <!-- 结果九宫格展示 -->
+        <view class="results-grid-view">
+          <view
+            class="result-card-cell {{selectedIndices.indexOf(item.index) >= 0 ? 'selected' : ''}}"
+            wx:for="{{results}}"
+            wx:key="index"
+          >
+            <!-- 勾选框 -->
+            <view
+              class="cell-check-box {{selectedIndices.indexOf(item.index) >= 0 ? 'checked' : ''}}"
+              catchtap="onToggleSelectItem"
+              data-index="{{item.index}}"
+            >
+              {{selectedIndices.indexOf(item.index) >= 0 ? '✓' : ''}}
+            </view>
+
+            <view class="cell-order-badge">#{{item.index + 1}}</view>
+            <image class="cell-gif-thumb" src="{{item.path}}" mode="aspectFit" />
+            <view class="cell-meta-bar">
+              <text class="cell-size">{{item.sizeText}}</text>
+              <text class="cell-dim">{{item.width}}×{{item.height}}</text>
+            </view>
+            <view class="cell-save-btn" bindtap="onSaveOne" data-index="{{item.index}}">
+              保存到相册
+            </view>
+          </view>
+        </view>
+
+        <!-- 底部提示与重切按钮 -->
+        <view class="history-dialog-footer">
+          <view class="recut-link-btn" bindtap="onReCut">
+            ↺ 重新调整切割参数
+          </view>
+          <view class="album-fail-hint">
+            若相册中动图静止，可点击保存后自动唤起微信发送给「文件传输助手」，动图原格式即可直接收藏为微信表情！
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 中断当前切割更换视频确认弹窗 -->
+  <view class="confirm-mask" wx:if="{{confirmReplaceOpen}}" catchtouchmove="noop">
+    <view class="confirm-dialog-card">
+      <view class="confirm-dialog-title">中断当前切割并更换视频？</view>
+      <view class="confirm-dialog-desc">
+        更换视频将中断正在进行的切割并清空已产出的结果，确定继续吗？
+      </view>
+      <view class="confirm-dialog-footer">
+        <view class="confirm-btn cancel" bindtap="closeConfirmReplace">继续切割</view>
+        <view class="confirm-btn ok" bindtap="confirmReplace">确认更换</view>
+      </view>
+    </view>
+  </view>
+</view>

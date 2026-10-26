@@ -1,0 +1,72 @@
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-bottom: 20rpx;
+}
+
+.card {
+  margin-bottom: 24rpx;
+}
+
+.field-label {
+  font-size: 24rpx;
+  color: #64748b;
+  margin-bottom: 10rpx;
+}
+
+.days-row {
+  display: flex;
+  gap: 16rpx;
+  flex-wrap: wrap;
+}
+
+.day-chip {
+  border: 1rpx solid #cbd5e1;
+  border-radius: 999rpx;
+  padding: 10rpx 30rpx;
+  font-size: 26rpx;
+  color: #475569;
+  background: #fff;
+}
+
+.day-chip.on {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+.result-item {
+  border-bottom: 1rpx solid #f1f5f9;
+  padding: 20rpx 0;
+}
+
+.result-uid {
+  font-size: 26rpx;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+
+.result-code {
+  font-family: Menlo, Consolas, monospace;
+  font-size: 28rpx;
+  color: #2563eb;
+  word-break: break-all;
+  margin-bottom: 4rpx;
+}
+
+.result-exp {
+  font-size: 22rpx;
+  color: #64748b;
+}
+
+.teacher-code {
+  font-family: Menlo, Consolas, monospace;
+  font-size: 32rpx;
+  letter-spacing: 4rpx;
+  color: #0f172a;
+  background: #f1f5f9;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  text-align: center;
+  margin-top: 20rpx;
+}

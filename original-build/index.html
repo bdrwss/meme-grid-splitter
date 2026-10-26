@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta name="description" content="纯前端在线表情包视频切割工具，支持上传多格动态视频或GIF，通过自定义拖拽切割线分割画面，并在本地批量导出独立的动态表情包片段。" />
+    <meta name="keywords" content="" />
+    <meta itemprop="image" content="https://job-manager-artifacts-online.cdn.bcebos.com/prod/artifacts/0b8d0705-ec9e-4cf9-8f19-f27e9f444a8a/app-f9osmt3mxse9_web_1792687261417.png" />
+    <meta property="og:title" content="九宫格表情包切割" />
+    <meta property="og:description" content="纯前端在线表情包视频切割工具，支持上传多格动态视频或GIF，通过自定义拖拽切割线分割画面，并在本地批量导出独立的动态表情包片段。" />
+    <meta property="og:image" content="https://job-manager-artifacts-online.cdn.bcebos.com/prod/artifacts/0b8d0705-ec9e-4cf9-8f19-f27e9f444a8a/app-f9osmt3mxse9_web_1792687261417.png" />
+    <meta property="og:url" content="https://app-f9osmt3mxse9.miaoda.online" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="九宫格表情包切割" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="九宫格表情包切割" />
+    <meta name="twitter:description" content="纯前端在线表情包视频切割工具，支持上传多格动态视频或GIF，通过自定义拖拽切割线分割画面，并在本地批量导出独立的动态表情包片段。" />
+    <meta name="twitter:image" content="https://job-manager-artifacts-online.cdn.bcebos.com/prod/artifacts/0b8d0705-ec9e-4cf9-8f19-f27e9f444a8a/app-f9osmt3mxse9_web_1792687261417.png" />
+    <meta name="twitter:url" content="https://app-f9osmt3mxse9.miaoda.online" />
+    <meta charset="UTF-8" />
+    <link rel="icon" href="https://job-manager-artifacts-online.cdn.bcebos.com/prod/artifacts/0b8d0705-ec9e-4cf9-8f19-f27e9f444a8a/app-f9osmt3mxse9_web_1792687261417.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>九宫格表情包切割</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" crossorigin src="https://op-sourcecode.cdn.bcebos.com/source_code/projects/conv-f9osmt3mxse8_1792687242913/assets/index-CSv1xKhH.js"></script>
+    <link rel="stylesheet" crossorigin href="https://op-sourcecode.cdn.bcebos.com/source_code/projects/conv-f9osmt3mxse8_1792687242913/assets/index-5MHfmlPY.css">
+    <script>
+              (function () {
+                const redirect = new URLSearchParams(location.search).get('redirect');
+                if (redirect && redirect !== location.pathname) {
+                  history.replaceState(null, '', redirect);
+                }
+              })();
+            </script>
+    <link rel="stylesheet" id="fonts-code" href="https://miaoda-font.cdn.bcebos.com/static/font_v1/fonts-code.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script id="md-click">
+              window.mdClick = e => {
+                const target = e.target;
+                const {href, target: linkTarget} = target.dataset;
+                const appType = 'web';
+                const isBlank = linkTarget === '_blank';
+
+                if (!href) return;
+
+                e.stopPropagation();
+                e.preventDefault();
+
+                // 外部链接或新窗口打开
+                if (isBlank || href.startsWith('http')) {
+                  let finalHref = href;
+                  if (appType === 'miniapp' && !href.startsWith('http')) {
+                    finalHref = window.location.href.split('#')[0] + '#/' + href;
+                  }
+                  window.open(finalHref, linkTarget || '_self');
+                  return;
+                }
+
+                // 内部路由跳转
+                const finalHref = href.startsWith('/') ? href : '/' + href;
+                if (appType === 'miniapp') {
+                  window.location.hash = finalHref;
+                  window.dispatchEvent(new HashChangeEvent('hashchange'));
+                } else {
+                  window.history.pushState({}, '', finalHref);
+                  window.dispatchEvent(new Event('popstate'));
+                }
+              };
+              document.addEventListener('click', window.mdClick, true);
+            </script>
+    <script id="iframe-onerror-catcher">
+              const observer = new PerformanceObserver((list) => {
+                list.getEntries().forEach((entry) => {
+                  if (entry.initiatorType === 'script' && entry.responseStatus >= 400) {
+                    window.parent.postMessage({
+                      type: "RESOURCE_LOAD_ERROR",
+                      name: entry.name,
+                      status: entry.responseStatus
+                    }, "*");
+                    console.warn('[iframe-error] Resource failed:', entry.name, entry.responseStatus);
+                  }
+                });
+              });
+              observer.observe({ type: 'resource', buffered: true });
+            </script>
+  <script>
+  (function () {
+    const script = document.createElement('script');
+    script.src = 'https://resource-static.cdn.bcebos.com/runtime-inject/domain-static/online/1.0.92.1/static/miaoda-external.js?tm=' + new Date().getTime();
+    script.async = true;
+    script.onload = function () {
+      window.miaoda.init({
+        appId: 'app-f9osmt3mxse9',
+        type: 'WEB',
+        share: {
+            title: "九宫格表情包切割",
+            desc: "纯前端在线表情包视频切割工具，支持上传多格动态视频或GIF，通过自定义拖拽切割线分割画面，并在本地批量导出独立的动态表情包片段。",
+            image: "https://job-manager-artifacts-online.cdn.bcebos.com/prod/artifacts/0b8d0705-ec9e-4cf9-8f19-f27e9f444a8a/app-f9osmt3mxse9_web_1792687261417.png"
+        }
+      });
+    };
+    document.head.appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

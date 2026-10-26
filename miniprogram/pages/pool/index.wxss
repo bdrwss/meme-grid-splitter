@@ -1,0 +1,125 @@
+.field-label {
+  font-size: 26rpx;
+  color: #475569;
+  margin-bottom: 12rpx;
+}
+
+.textarea {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 220rpx;
+  background: #f1f5f9;
+  border-radius: 12rpx;
+  padding: 18rpx 20rpx;
+  font-size: 28rpx;
+}
+
+.row-btns {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 28rpx;
+}
+
+.half {
+  flex: 1;
+}
+
+.center {
+  text-align: center;
+  padding: 20rpx 0 8rpx;
+}
+
+/* 筛选行 */
+.filters {
+  display: flex;
+  gap: 14rpx;
+  margin-bottom: 20rpx;
+}
+
+.f-batch {
+  width: 200rpx;
+  flex-shrink: 0;
+  padding: 14rpx 16rpx;
+}
+
+.f-uid {
+  flex: 1;
+  padding: 14rpx 16rpx;
+}
+
+.f-status {
+  width: 176rpx;
+  flex-shrink: 0;
+}
+
+.picker-val {
+  padding: 14rpx 16rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #475569;
+}
+
+/* 学员条目 */
+.stu {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f1f5f9;
+}
+
+.stu:last-child {
+  border-bottom: none;
+}
+
+.stu-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.stu-uid {
+  font-size: 28rpx;
+  font-weight: 500;
+  font-family: Menlo, Consolas, monospace;
+  margin-bottom: 6rpx;
+}
+
+.stu-ops {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  flex-shrink: 0;
+  margin-left: 16rpx;
+}
+
+.stu-status {
+  font-size: 20rpx;
+  border-radius: 999rpx;
+  padding: 4rpx 14rpx;
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.stu-status.s1 {
+  background: rgba(74, 222, 128, 0.14);
+  color: #16a34a;
+}
+
+.stu-status.s2 {
+  background: rgba(220, 38, 38, 0.1);
+  color: #dc2626;
+}
+
+.op {
+  font-size: 22rpx;
+  color: #2563eb;
+  padding: 8rpx 14rpx;
+  border: 1rpx solid #bfdbfe;
+  border-radius: 10rpx;
+  white-space: nowrap;
+}
+
+.op.danger {
+  color: #dc2626;
+  border-color: #fecaca;
+}

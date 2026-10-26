@@ -1,0 +1,57 @@
+<view class="page">
+  <!-- 功能1：分批次批量上传 UID（PRD 四.2） -->
+  <view class="card">
+    <view class="section-title">批量录入学员 UID</view>
+    <view class="field-label">批次名称</view>
+    <input class="input" placeholder="如：202607期" value="{{batchNo}}" bindinput="onBatchInput" />
+    <view class="field-label" style="margin-top: 20rpx;">
+      UID 列表（可从 Excel / 微信整列复制粘贴，按换行/逗号自动拆解去重）
+    </view>
+    <textarea
+      class="textarea"
+      placeholder="一行一个 UID，也支持逗号分隔"
+      value="{{uidsText}}"
+      bindinput="onUidsInput"
+      maxlength="-1"
+    ></textarea>
+    <view class="row-btns">
+      <view class="btn-ghost half" bindtap="pickFile">从聊天文件导入</view>
+      <view class="btn-primary half {{importing ? 'disabled' : ''}}" bindtap="importUids">导入学员总表</view>
+    </view>
+    <view class="muted" style="margin-top: 14rpx; line-height: 1.5;">
+      已存在的 UID 自动跳过，不会中断；单次最多 300 个。Excel 文件请先另存为 CSV 再导入。
+    </view>
+  </view>
+
+  <!-- 功能2：学员列表查询与筛选（PRD 四.2） -->
+  <view class="card">
+    <view class="section-title">我的学员（{{total}}）</view>
+    <view class="filters">
+      <input class="input f-batch" placeholder="批次号" value="{{fBatch}}" bindinput="onFBatch" bindconfirm="reloadFilters" />
+      <input class="input f-uid" placeholder="搜索 UID" value="{{fUid}}" bindinput="onFUid" bindconfirm="reloadFilters" />
+      <picker class="f-status" range="{{statusOptions}}" value="{{statusIndex}}" bindchange="onStatusPick">
+        <view class="input picker-val">{{statusOptions[statusIndex]}} ▾</view>
+      </picker>
+    </view>
+
+    <view class="stu" wx:for="{{list}}" wx:key="_id">
+      <view class="stu-main">
+        <view class="stu-uid">{{item.student_uid}}</view>
+        <view class="muted">
+          {{item.batch_no || '—'}}{{item.teacher_uid ? '' : ' · 公共学员'}}{{item.bound_openid ? ' · 已绑微信' : ''}}
+        </view>
+      </view>
+      <view class="stu-ops">
+        <view class="stu-status s{{item.status}}">{{item.status === 0 ? '未绑定' : item.status === 1 ? '已绑定' : '已封禁'}}</view>
+        <view class="op" wx:if="{{item.status === 1}}" bindtap="unbindItem" data-id="{{item.student_uid}}">解绑微信</view>
+        <view class="op danger" bindtap="removeItem" data-id="{{item.student_uid}}" data-status="{{item.status}}">
+          {{item.status === 0 ? '删除' : '移除'}}
+        </view>
+      </view>
+    </view>
+
+    <view class="muted center" wx:if="{{!loading && list.length === 0}}">暂无学员，先在上方批量录入</view>
+    <view class="muted center" wx:if="{{loading}}">加载中…</view>
+    <view class="muted center" wx:if="{{!loading && list.length > 0 && !hasMore}}">没有更多了</view>
+  </view>
+</view>

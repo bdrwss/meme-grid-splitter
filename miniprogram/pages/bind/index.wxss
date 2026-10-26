@@ -1,0 +1,39 @@
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-bottom: 20rpx;
+}
+
+.card {
+  margin-bottom: 24rpx;
+}
+
+.kv {
+  display: flex;
+  justify-content: space-between;
+  padding: 12rpx 0;
+  font-size: 28rpx;
+}
+
+.kv .k {
+  color: #64748b;
+}
+
+.kv .v.ok {
+  color: #16a34a;
+}
+
+.kv .v.bad {
+  color: #dc2626;
+}
+
+.field-label {
+  font-size: 24rpx;
+  color: #64748b;
+  margin-bottom: 10rpx;
+}
+
+.mono {
+  font-family: Menlo, Consolas, monospace;
+  letter-spacing: 1rpx;
+}
